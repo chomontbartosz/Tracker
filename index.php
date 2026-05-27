@@ -11,31 +11,55 @@ $config = require $configPath;
 $token = $config['toggl_api_token'] ?? '';
 $limitHours = (float)($config['monthly_limit_hours'] ?? 40);
 
-function togglRequest(string $url, string $token): array
+function togglHttp(string $url, string $token, string $mode): array
 {
+    $headers = ['Content-Type: application/json'];
     $ch = curl_init($url);
-    curl_setopt_array($ch, [
+    $opts = [
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_USERPWD => $token . ':api_token',
-        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
         CURLOPT_TIMEOUT => 30,
-    ]);
+    ];
+    if ($mode === 'bearer') {
+        $headers[] = 'Authorization: Bearer ' . $token;
+    } else {
+        $opts[CURLOPT_USERPWD] = $token . ':api_token';
+    }
+    $opts[CURLOPT_HTTPHEADER] = $headers;
+    curl_setopt_array($ch, $opts);
+
     $body = curl_exec($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $err = curl_error($ch);
-    curl_close($ch);
 
     if ($body === false) {
         throw new RuntimeException('cURL error: ' . $err);
     }
-    if ($code < 200 || $code >= 300) {
-        throw new RuntimeException("HTTP $code from $url: $body");
+    return ['code' => (int)$code, 'body' => (string)$body];
+}
+
+function togglRequest(string $url, string $token): array
+{
+    // Try Bearer first (new-style tokens like "toggl_sk_..."),
+    // then Basic auth (legacy 32-char hex tokens).
+    $modes = ['bearer', 'basic'];
+    $lastCode = 0;
+    $lastBody = '';
+    foreach ($modes as $mode) {
+        $res = togglHttp($url, $token, $mode);
+        if ($res['code'] >= 200 && $res['code'] < 300) {
+            $data = json_decode($res['body'], true);
+            if (!is_array($data)) {
+                throw new RuntimeException('Invalid JSON from ' . $url);
+            }
+            return $data;
+        }
+        $lastCode = $res['code'];
+        $lastBody = $res['body'];
+        if ($res['code'] !== 401 && $res['code'] !== 403) {
+            break;
+        }
     }
-    $data = json_decode($body, true);
-    if (!is_array($data)) {
-        throw new RuntimeException('Invalid JSON from ' . $url);
-    }
-    return $data;
+    throw new RuntimeException("HTTP $lastCode from $url: $lastBody");
 }
 
 function formatDuration(int $seconds): string
