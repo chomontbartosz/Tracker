@@ -1,0 +1,163 @@
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f5f6f8;
+    color: #1f2330;
+}
+
+.container {
+    max-width: 900px;
+    margin: 32px auto;
+    padding: 24px 28px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+header h1 {
+    margin: 0 0 4px;
+    font-size: 22px;
+}
+
+.subtitle {
+    margin: 0 0 20px;
+    color: #6b7080;
+    font-size: 14px;
+}
+
+.error {
+    background: #fff1f0;
+    border: 1px solid #ffccc7;
+    color: #a8071a;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.error pre {
+    white-space: pre-wrap;
+    margin: 8px 0 0;
+    font-size: 12px;
+}
+
+table.entries {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+table.entries th,
+table.entries td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #eceef3;
+    text-align: left;
+}
+
+table.entries thead th {
+    background: #fafbfc;
+    font-weight: 600;
+    color: #4a4f5e;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+table.entries tfoot th {
+    background: #fafbfc;
+    font-weight: 700;
+    border-top: 2px solid #d6d9e0;
+    border-bottom: none;
+}
+
+table.entries .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+table.entries .empty {
+    text-align: center;
+    color: #8a8f9c;
+    padding: 24px;
+}
+
+.limit {
+    background: #fafbfc;
+    padding: 16px 18px;
+    border-radius: 10px;
+    border: 1px solid #eceef3;
+}
+
+.limit-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.limit-header .over {
+    color: #c0392b;
+}
+
+.bar {
+    position: relative;
+    height: 18px;
+    background: #e6e9ef;
+    border-radius: 9px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    transition: width 0.4s ease;
+}
+
+.bar-fill.over {
+    background: linear-gradient(90deg, #ef4444, #b91c1c);
+}
+
+.bar-overflow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.25),
+        rgba(255, 255, 255, 0.25) 6px,
+        transparent 6px,
+        transparent 12px
+    );
+}
+
+.limit-summary {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #4a4f5e;
+}
+
+.limit-summary .over {
+    color: #c0392b;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+#refreshBtn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#refreshBtn:hover {
+    background: #1d4ed8;
+}
